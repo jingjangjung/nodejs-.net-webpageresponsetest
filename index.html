@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>node.js load-testing</title>
+    <link href="css/style.css" type="text/css" rel="stylesheet">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <!--<script src="http://code.jquery.com/jquery-2.0.0.js"></script>-->
+    <style>
+        body{height: 100%;
+            font-family: sans-serif;
+            background-color: ghostwhite;
+            margin: 0;
+            padding: 0;
+        }
+
+        a{
+            color: #ffffff;
+            text-decoration: none;
+            display: inline;
+            font-weight: bold;
+        }
+
+        #header{
+            background-color: #036;
+            clear: both;
+            /*width: 1000px;*/
+            margin-left: auto;
+            margin-right: auto;
+            height: 120px;
+            padding: 10px;
+        }
+
+        #headerNav{
+            float: left;
+            margin-top: 80px;
+            resize: none;
+            overflow: hidden;
+        }
+
+        #subheadernav{
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 10px;
+            background-color: #2a2a2a;
+            opacity: .9;
+        }
+
+        #maincontent{
+            height: 100%;
+            background-color: lightgrey;
+            padding: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+
+
+    <div id="container">
+
+
+        <!--main header-->
+        <header>
+            <div id="header">
+                <div id="headerNav" role="navigation">
+                    <a id="nav-dashboard" href="">WEB LOADING RESPONSE TESTING </a>
+                </div>
+            </div>
+        </header>
+
+        <!--split div only-->
+        <div id="subheadernav"></div>
+        <div id="maincontent">
+            <p>Recent findings indicate 47 percent of consumers expect an e-commerce page to load in <span style="color:#ff0000;"><strong>two seconds or less.</strong></span> 
+                <strong>Site performance is a key factor in a consumer’s loyalty.</strong>  What about sites other than retail such as blogs, directories, news and etc.? 
+                A user waits 5 seconds on average for a page to load before taking their business elsewhere.
+                <br><br>
+                <strong>Extract from : </Strong> http://www.mynitor.com/2009/10/29/25-free-tools-to-measure-website-performance
+            </p>
+
+            <div id="callsource" style="display: inline-block">
+                <h1> GET RESPONSE REMOTE WEB</h1>
+
+                <label for="urlparam"> WEB URL: </label>
+                <input type="text" id="urlparam" name="urlparam">
+
+                <label for="repeatCount">Repeat(s): </label>
+                <input type="number" id="repeatCount" name="repeatCount" min="1">
+
+                <label for="setTimeOut">Set Timeout(s): </label>
+                <input type="number" id="setTimeOut" name="setTimeOut" placeholder="milliseconds">
+                <input type="submit" id="cmdExe" name="cmdExe" value="Execute">
+
+            </div>
+
+            <div id="respondConsole">
+
+                <h1 style="margin-bottom:0px;">RESPONDING CONSOLE</h1>
+                <input type="button" id="cmdClearConsole" name="cmdClearConsole" value="Clear console">
+
+                <div id="wrapperConsole">
+                    <div id="consolewebbox" name="consolewebbox" style="text-overflow:ellipsis;background-color:#ffffff;border:1px solid black;">
+                        <ul id="consolewebbox_list" style="width:auto;text-overflow:ellipsis;font-family: Consolas ,sans-serif">
+                            <li>&gt;...</li>
+                        </ul>
+                    </div>
+                </div>
+        </div>
+    </div>
+    </div>
+
+<script>
+    $(document).ready(function(){
+        $('#cmdClearConsole').click(function(){
+            $('#consolewebbox_list').empty();
+            $('#consolewebbox_list').append($('<li>' + '>...' + '</li>'));
+        });
+
+
+        //socket.io client side
+        var clientSocket = io.connect();
+        clientSocket.on('connect', function () {
+            //TODO: placing in the 'connect' is work
+
+
+            $('#cmdExe').click(function(){
+                var testurl = $('#urlparam').val();
+                var responserepeat = $('#repeatCount').val();
+                var timeout = $('#setTimeOut').val();
+                var completeparam = testurl + ' ' + responserepeat + ' ' + timeout;
+
+
+                //iosocket.emit('name of the function at callback', 'parameter');to activate the callback at server side
+                if (testurl == ' '|| responserepeat == '' || timeout ==''){
+                    alert('Check your url, request repeat, and timeout');
+                }
+                else {
+                    clientSocket.emit('testClick',completeparam);
+                }
+            });
+
+
+            clientSocket.on('webResponseConsole', function(consoleLog){
+                //this works but format needs to be review again
+                $('#consolewebbox_list').append($('<li>' + consoleLog + '</li>'));
+            });
+        });
+
+
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>node.js load-testing</title>
+    <link href="css/style.css" type="text/css" rel="stylesheet">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+</head>
+<body>
+
+<div id="container">
+<!--    <header>
+        <div id="header">
+            <div id="headerNav" role="navigation">
+                <a id="nav-dashboard" href="/">DASHBOARD | </a>
+                <a id="nav-test" href="test.html">PERFORM TEST | </a>
+                <a id="nav-setuptest" href="http://windows.microsoft.com/en-us/windows/how-to">TEST SETUP | </a>
+                <a id="nav-support" href="http://windows.microsoft.com/en-us/windows/support">SUPPORT | </a>
+                <a id="test" href="index2.html"> TO INDEX2.HTML |</a>
+                <a id="nodeloadissue" href="ndissue.html"> TO CHECK NODESTATIC ISSUE.HTML </a>
+            </div>
+        </div>
+    </header>-->
+
+    <!--split div only-->
+    <div id="subheadernav"></div>
+    <div id="maincontent">
+
+<!--
+        <div id="testconcurrent" style="display: inline-block;background-color: #0b97c4">
+            <h1> PERFORM TEST </h1>
+            <label for="testlist">Pick test setting</label>
+            <select type="" id="testlist" name="testlist">
+                <option>list1</option>
+                <option>list2</option>
+            </select>
+            <label for="conusr">Concurrent user</label>
+            <input type="text" id="conusr" name="conusr">
+            <label for="stmthreds">stimulate threads</label>
+            <input type="text" id="stmthreds" name="stmthreds">
+        </div>
+-->
+
+        <div id="callsource" style="display: inline-block; background-color: #0b97ff">
+            <h1> GET RESPONSE REMOTE WEB</h1>
+            <label for="urlparam"> WEB URL: </label>
+            <input type="text" id="urlparam" name="urlparam" value="http://">
+            <label for="connectCount">Loop(s): </label>
+            <input type="number" id="connectCount" name="connectCount" value="1" min="1">
+            <input type="submit" id="cmdExe" name="cmdExe" value="Execute">
+        </div>
+
+        <div id="respondConsole">
+            <h1>RESPONDING CONSOLE</h1>
+            <input type="text" id="consoleweb" name="consoleweb" value="" style="width: 100%;">
+            <label for="connectCount">Successful connection</label>
+            <input type="text" id="connectCount1" name="connectCount1" value="(no of success. conn)">
+
+            <!--FUNCTION IN NODE
+                exports.urlResponse = function (url){
+                request(url, function (error, response, body) {
+                    if (!error && response.statusCode == 200) {
+                        // Print the google web page.
+                        console.log(body);
+                    } else{
+                        console.log('COULD NOT GET SOURCE CODE!!!');
+                    }
+                });
+            }
+            -->
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function(){
+        $('#cmdExe').click(function(){
+
+
+        });
+    });
+
+    var socket = io.connect('http://localhost');
+    socket.on('news', function (data) {
+        console.log(data);
+        socket.emit('my other event', { my: 'data' });
+    });
+
+</script>
+
+</body>
+</html>
